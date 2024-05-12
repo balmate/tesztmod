@@ -15,7 +15,7 @@ from algorithms.maths import (
     get_primes,
     pythagoras,
     is_prime,
-    encrypt, decrypt,
+    encrypt, decrypt, generate_key,
     combination, combination_memo,
     hailstone,
     cosine_similarity,
@@ -188,8 +188,14 @@ class TestGenerateStroboGrammatic(unittest.TestCase):
     def test_gen_strobomatic(self):
         self.assertEqual(['88', '11', '96', '69'], gen_strobogrammatic(2))
 
+    def test_gen_strobomatic_include_zeros(self):
+        self.assertIn('10101', gen_strobogrammatic(5))
+
     def test_strobogrammatic_in_range(self):
         self.assertEqual(4, strobogrammatic_in_range("10", "100"))
+
+    def test_strobogrammatic_in_range_0_1(self):
+        self.assertEqual(2, strobogrammatic_in_range("0", "1"))
 
 
 class TestIsStrobogrammatic(unittest.TestCase):
@@ -254,6 +260,9 @@ class TestNextPerfectSquare(unittest.TestCase):
         self.assertEqual(36, find_next_square(25))
         self.assertEqual(1, find_next_square(0))
 
+    def test_find_next_square_invalid(self):
+        self.assertEqual(-1, find_next_square(5))
+
     def test_find_next_square2(self):
         self.assertEqual(36, find_next_square2(25))
         self.assertEqual(1, find_next_square2(0))
@@ -270,6 +279,9 @@ class TestPrimesSieveOfEratosthenes(unittest.TestCase):
     def test_primes(self):
         self.assertListEqual([2, 3, 5, 7], get_primes(7))
         self.assertRaises(ValueError, get_primes, -42)
+
+    def test_primes_1(self):
+        self.assertListEqual([], get_primes(1))
 
 
 class TestPrimeTest(unittest.TestCase):
@@ -291,6 +303,9 @@ class TestPrimeTest(unittest.TestCase):
                 counter += 1
         self.assertEqual(25, counter)
 
+    def test_prime_check_1(self):
+        self.assertEqual(False, prime_check(1))
+
 
 class TestPythagoras(unittest.TestCase):
     """[summary]
@@ -304,6 +319,21 @@ class TestPythagoras(unittest.TestCase):
         self.assertEqual("Hypotenuse = 3.605551275463989",
                          pythagoras(3, 2, "?"))
 
+    def test_pythagoras_opposite(self):
+        self.assertEqual("Opposite = 3.0",
+                         pythagoras("?", 4, 5))
+
+    def test_pythagoras_adjacent(self):
+        self.assertEqual("Adjacent = 4.0",
+                         pythagoras(3, "?", 5))
+
+    def test_pythagoras_all_known(self):
+        self.assertEqual("You already know the answer!",
+                         pythagoras(3, 4, 5))
+
+    def test_pythagoras_multiple_unknown(self):
+        with self.assertRaises(Exception):
+            pythagoras(3, "?", "?")
 
 class TestRabinMiller(unittest.TestCase):
     """[summary]
