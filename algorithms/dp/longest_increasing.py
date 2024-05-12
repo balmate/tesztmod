@@ -60,7 +60,7 @@ def longest_increasing_subsequence_optimized(sequence):
             update(pos<<1, left, mid, target, vertex)
         else:
             update((pos<<1)|1, mid+1, right, target, vertex)
-        tree[pos] = max_seq(tree[pos<<1], tree[(pos<<1)|1])
+        tree[pos] = max(tree[pos<<1], tree[(pos<<1)|1])
 
     def get_max(pos, left, right, start, end):
         if left > end or right < start:
@@ -68,12 +68,12 @@ def longest_increasing_subsequence_optimized(sequence):
         if left >= start and right <= end:
             return tree[pos]
         mid = (left+right)>>1
-        return max_seq(get_max(pos<<1, left, mid, start, end),
+        return max(get_max(pos<<1, left, mid, start, end),
             get_max((pos<<1)|1, mid+1, right, start, end))
     ans = 0
     for element in sequence:
         cur = get_max(1, 0, max_seq, 0, element-1)+1
-        ans = max_seq(ans, cur)
+        ans = max(ans, cur)
         update(1, 0, max_seq, element, cur)
     return ans
 
@@ -95,9 +95,9 @@ def longest_increasing_subsequence_optimized2(sequence):
             return
         mid = (left+right)>>1
         if target <= mid:
-            vertex(pos<<1, left, mid, target, vertex)
+            update(pos<<1, left, mid, target, vertex)
         else:
-            vertex((pos<<1)|1, mid+1, right, target, vertex)
+            update((pos<<1)|1, mid+1, right, target, vertex)
         tree[pos] = max(tree[pos<<1], tree[(pos<<1)|1])
 
     def get_max(pos, left, right, start, end):

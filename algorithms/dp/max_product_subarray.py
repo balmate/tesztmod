@@ -63,4 +63,4 @@ def subarray_with_max_product(arr):
         print(f"max_product_so_far: {reduce(lambda x, y: x * y, arr)}, {arr}")
 
     else:
-        print(f"max_product_so_far: {product_so_far},{arr[so_far_start_i:so_far_end_i + 1]}")
+        print(f"max_product_so_far: {product_so_far}, {arr[so_far_start_i:so_far_end_i + 1]}")

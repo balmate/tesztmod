@@ -6,19 +6,25 @@ from algorithms.dp import (
     edit_distance,
     egg_drop,
     fib_recursive, fib_list, fib_iter,
-    hosoya_testing,
+    hosoya_testing, print_hosoya,
     house_robber,
     Job, schedule,
     Item, get_maximum_value,
     longest_increasing_subsequence,
     longest_increasing_subsequence_optimized,
     longest_increasing_subsequence_optimized2,
+    subarray_with_max_product,
+    min_cost,
+    num_decodings, num_decodings2,
     int_divide,find_k_factor,
-    planting_trees, regex_matching
+    planting_trees, regex_matching,
+    word_break
 )
 
 
+import io
 import unittest
+import unittest.mock
 
 
 class TestBuySellStock(unittest.TestCase):
@@ -81,6 +87,9 @@ class TestFib(unittest.TestCase):
         self.assertEqual(fib_iter(10), 55)
         self.assertEqual(fib_iter(30), 832040)
 
+    def test_fib_iter_1(self):
+        self.assertEqual(fib_iter(1), 1)
+
 
 class TestHosoyaTriangle(unittest.TestCase):
     """[summary]
@@ -110,6 +119,11 @@ class TestHosoyaTriangle(unittest.TestCase):
                           34, 21, 26, 24, 25, 24, 26, 21, 34,
                           55, 34, 42, 39, 40, 40, 39, 42, 34, 55],
                          hosoya_testing(10))
+
+    @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
+    def test_print_hosoya(self, mock_stdout: io.StringIO):
+        print_hosoya(3)
+        self.assertEqual("1 \n1 1 \n2 1 2 \n", mock_stdout.getvalue())
 
 
 class TestHouseRobber(unittest.TestCase):
@@ -142,13 +156,50 @@ class TestLongestIncreasingSubsequence(unittest.TestCase):
 class TestLongestIncreasingSubsequenceOptimized(unittest.TestCase):
     def test_longest_increasing_subsequence_optimized(self):
         sequence = [1, 101, 10, 2, 3, 100, 4, 6, 2]
-        self.assertEqual(5, longest_increasing_subsequence(sequence))
+        self.assertEqual(5, longest_increasing_subsequence_optimized(sequence))
 
 
 class TestLongestIncreasingSubsequenceOptimized2(unittest.TestCase):
     def test_longest_increasing_subsequence_optimized2(self):
         sequence = [1, 101, 10, 2, 3, 100, 4, 6, 2]
-        self.assertEqual(5, longest_increasing_subsequence(sequence))
+        self.assertEqual(5, longest_increasing_subsequence_optimized2(sequence))
+
+
+class TestMaxProduct(unittest.TestCase):
+    @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
+    def test_subarray_with_max_product(self, mock_stdout: io.StringIO):
+        subarray_with_max_product([2,3,6,-1,-1,9,5])
+        self.assertEqual("max_product_so_far: 45, [-1, -1, 9, 5]\n", mock_stdout.getvalue())
+
+    @unittest.mock.patch('sys.stdout', new_callable=io.StringIO)
+    def test_subarray_with_max_product_all_negative(self, mock_stdout: io.StringIO):
+        subarray_with_max_product([-4,-3,-2,-1])
+        self.assertEqual("max_product_so_far: 24, [-4, -3, -2, -1]\n", mock_stdout.getvalue())
+
+
+class TestMinCostPath(unittest.TestCase):
+    def test_min_cost(self):
+        costs = [
+            [ 0, 15, 80, 90],
+            [-1,  0, 40, 50],
+            [-1, -1,  0, 70],
+            [-1, -1, -1,  0]
+        ]
+        self.assertEqual(65, min_cost(costs))
+
+
+class TestNumDecodings(unittest.TestCase):
+    def test_num_decodings(self):
+        self.assertEqual(2, num_decodings("1024"))
+
+    def test_num_decodings_0(self):
+        self.assertEqual(0, num_decodings("0"))
+
+    def test_num_decodings2(self):
+        self.assertEqual(2, num_decodings2("1024"))
+
+    def test_num_decodings2_0(self):
+        self.assertEqual(0, num_decodings2("0"))
 
 
 class TestIntDivide(unittest.TestCase):
@@ -184,6 +235,9 @@ class Test_dp_K_Factor(unittest.TestCase):
         n5 = 9
         k5 = 1
         self.assertEqual(find_k_factor(n5, k5), 71284044)
+
+    def test_kfactor_n1_k1(self):
+        self.assertEqual(find_k_factor(1, 1), 0)
 
 
 class TestPlantingTrees(unittest.TestCase):
@@ -257,6 +311,14 @@ class TestRegexMatching(unittest.TestCase):
         s = "abb"
         p = "ab*"
         self.assertTrue(regex_matching.is_match(s, p))
+
+
+class TestWordBreak(unittest.TestCase):
+    def test_word_break_true(self):
+        self.assertEqual(True, word_break("helloworld", ["hello", "world"]))
+
+    def test_word_break_false(self):
+        self.assertEqual(False, word_break("abc", ["a", "b"]))
 
 
 if __name__ == '__main__':
