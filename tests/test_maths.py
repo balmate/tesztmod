@@ -67,6 +67,9 @@ class TestBaseConversion(unittest.TestCase):
         self.assertEqual("0", int_to_base(0, 2))
         self.assertEqual("FF", int_to_base(255, 16))
 
+    def test_int_to_base_negative(self):
+        self.assertEqual("-101", int_to_base(-5, 2))
+
     def test_base_to_int(self):
         self.assertEqual(5, base_to_int("101", 2))
         self.assertEqual(0, base_to_int("0", 2))
@@ -408,6 +411,12 @@ class TestCosineSimilarity(unittest.TestCase):
         self.assertAlmostEqual(cosine_similarity(vec_a, vec_b), -1)
         self.assertAlmostEqual(cosine_similarity(vec_a, vec_c), 0.4714045208)
 
+    def test_exception_input_length(self):
+        vec_a = [1, 1, 1]
+        vec_b = [1, 1, 1, 1]
+        with self.assertRaises(Exception):
+            cosine_similarity(vec_a, vec_b)
+
 
 class TestFindPrimitiveRoot(unittest.TestCase):
     """[summary]
@@ -547,6 +556,18 @@ class TestChineseRemainderSolver(unittest.TestCase):
         # numbers in num are not pairwise coprime
         num = [3, 7, 10, 14]
         rem = [2, 3, 3, 1]
+        with self.assertRaises(Exception):
+            chinese_remainder_theorem.solve_chinese_remainder(num, rem)
+
+    def test_exception_input_length(self):
+        num = [3, 5, 7, 11, 26]
+        rem = [2, 3, 2]
+        with self.assertRaises(Exception):
+            chinese_remainder_theorem.solve_chinese_remainder(num, rem)
+
+    def test_exception_num_less_than_1(self):
+        num = [3, 0, 7]
+        rem = [2, 3, 2]
         with self.assertRaises(Exception):
             chinese_remainder_theorem.solve_chinese_remainder(num, rem)
 
