@@ -119,7 +119,7 @@ class TestMaximumFlow(unittest.TestCase):
             ]
         self.assertEqual(19, edmonds_karp(capacity, 0, 6))
 
-    def dinic(self):
+    def test_dinic(self):
         capacity = [
                 [0, 10, 10, 0, 0, 0, 0],
                 [0, 0, 2, 0, 4, 8, 0],
