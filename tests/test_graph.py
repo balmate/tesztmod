@@ -321,6 +321,22 @@ class TestCycleDetection(unittest.TestCase):
         self.assertFalse(cycle_detection.contains_cycle(graph))
 
 class TestFindPath(unittest.TestCase):
+    def test_find_path(self):
+        graph = {'A': ['B', 'C'],
+                'B': ['C', 'D'],
+                'C': ['D', 'F'],
+                'D': ['C'],
+                'E': ['F'],
+                'F': ['C']}
+        path_A_A = find_path.find_path(graph, 'A', 'A')
+        self.assertEqual(path_A_A, ['A'])
+
+        path_A_F = find_path.find_path(graph, 'A', 'C')
+        self.assertEqual(path_A_F, ['A', 'B', 'C'])
+
+        path_NONE_C = find_path.find_path(graph, '', 'C')
+        self.assertIsNone(path_NONE_C)
+
     def test_find_all_paths(self):
         graph = {'A': ['B', 'C'],
                  'B': ['C', 'D'],
@@ -336,6 +352,17 @@ class TestFindPath(unittest.TestCase):
             ['A', 'B', 'C', 'F'],
             ['A', 'B', 'D', 'C', 'F'],
         ]))
+
+    def test_find_shortest_path(self):
+        graph = {'A': ['B', 'C'],
+                'B': ['C', 'D'],
+                'C': ['D', 'F'],
+                'D': ['C'],
+                'E': ['F'],
+                'F': ['C']}
+        
+        shortest = find_path.find_shortest_path(graph, 'A', 'F')
+        self.assertEqual(shortest, ['A', 'C', 'F'])
 
 class TestPathBetweenTwoVertices(unittest.TestCase):
     def test_node_is_reachable(self):
