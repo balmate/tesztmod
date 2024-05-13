@@ -42,6 +42,9 @@ from algorithms.strings import (
     longest_palindrome,
     knuth_morris_pratt,
     panagram,
+    strip_url_params1,
+    strip_url_params2,
+    strip_url_params3,
     fizzbuzz
 )
 
@@ -127,6 +130,10 @@ class TestDomainExtractor(unittest.TestCase):
     def test_valid(self):
         self.assertEqual(domain_name_1("https://github.com/SaadBenn"),
                          "github")
+
+    def test_valid_multiple_subdomains(self):
+        self.assertEqual(domain_name_1("https://webmasters.stackexchange.com"),
+                         "stackexchange")
 
     def test_invalid(self):
         self.assertEqual(domain_name_2("http://google.com"), "google")
@@ -287,9 +294,13 @@ class TestMergeStringChecker(unittest.TestCase):
 
     def test_is_merge_recursive(self):
         self.assertTrue(is_merge_recursive("codewars", "cdw", "oears"))
+        self.assertFalse(is_merge_recursive("", "code", "wars"))
+        self.assertFalse(is_merge_recursive("codewars", "cdw", ""))
+        self.assertFalse(is_merge_recursive("totally", "different", "words"))
 
     def test_is_merge_iterative(self):
         self.assertTrue(is_merge_iterative("codewars", "cdw", "oears"))
+        self.assertFalse(is_merge_iterative("", "None", "None"))
 
 
 class TestMultiplyStrings(unittest.TestCase):
@@ -316,12 +327,17 @@ class TestOneEditDistance(unittest.TestCase):
     """
 
     def test_is_one_edit(self):
+        self.assertTrue(is_one_edit("abcd", "abd"))
+        self.assertTrue(is_one_edit("abc", "abcd"))
         self.assertTrue(is_one_edit("abc", "abd"))
         self.assertFalse(is_one_edit("abc", "aed"))
         self.assertFalse(is_one_edit("abcd", "abcd"))
 
     def test_is_one_edit2(self):
+        self.assertTrue(is_one_edit2("abcd", "abd"))
         self.assertTrue(is_one_edit2("abc", "abd"))
+        self.assertTrue(is_one_edit2("abc", "abcd"))
+        self.assertFalse(is_one_edit2("abcde", "abd"))
         self.assertFalse(is_one_edit2("abc", "aed"))
         self.assertFalse(is_one_edit2("abcd", "abcd"))
 
@@ -399,29 +415,37 @@ class TestRomanToInt(unittest.TestCase):
         self.assertEqual(3999, roman_to_int("MMMCMXCIX"))
 
 
-# class TestStripUrlParams(unittest.TestCase):
-#     """[summary]
-#     Test for the file strip_urls_params.py
+class TestStripUrlParams(unittest.TestCase):
+    """[summary]
+    Test for the file strip_urls_params.py
 
-#     Arguments:
-#         unittest {[type]} -- [description]
-#     """
+    Arguments:
+        unittest {[type]} -- [description]
+    """
 
-#     def test_strip_url_params1(self):
-#         self.assertEqual(strip_url_params1("www.saadbenn.com?a=1&b=2&a=2"),
-#                         "www.saadbenn.com?a=1&b=2")
-#         self.assertEqual(strip_url_params1("www.saadbenn.com?a=1&b=2",
-#                          ['b']), "www.saadbenn.com?a=1")
-#     def test_strip_url_params2(self):
-#         self.assertEqual(strip_url_params2("www.saadbenn.com?a=1&b=2&a=2"),
-#                         "www.saadbenn.com?a=1&b=2")
-#         self.assertEqual(strip_url_params2("www.saadbenn.com?a=1&b=2",
-#                         'b']), "www.saadbenn.com?a=1")
-#     def test_strip_url_params3(self):
-#         self.assertEqual(strip_url_params3("www.saadbenn.com?a=1&b=2&a=2"),
-#                         "www.saadbenn.com?a=1&b=2")
-#         self.assertEqual(strip_url_params3("www.saadbenn.com?a=1&b=2",
-#                         ['b']), "www.saadbenn.com?a=1")
+    def test_strip_url_params1(self):
+        self.assertEqual(strip_url_params1("www.saadbenn.com?a=1&b=2&a=2"),
+                        "www.saadbenn.com?a=1&b=2")
+        self.assertEqual(strip_url_params1("www.saadbenn.com?a=1&b=2",
+                         ['b']), "www.saadbenn.com?a=1")
+        self.assertEqual(strip_url_params1("www.saadbenn.com?",
+                        ['b']), "www.saadbenn.com?")
+        self.assertNotEqual(strip_url_params1("www.saadbenn.com?a=1&b=2&a=2",
+                        ['a']), "www.saadbenn.com?a=1&b=2")
+        
+    def test_strip_url_params2(self):
+        self.assertEqual(strip_url_params2("www.saadbenn.com?a=1&b=2&a=2"),
+                        "www.saadbenn.com?a=1&b=2")
+        self.assertEqual(strip_url_params2("www.saadbenn.com?a=1&b=2",
+                        ['b']), "www.saadbenn.com?a=1")
+        self.assertNotEqual(strip_url_params2("www.saadbenn.com/a=1&b=2",
+                        ['b']), "www.saadbenn.com?a=1")
+        
+    def test_strip_url_params3(self):
+        self.assertEqual(strip_url_params3("www.saadbenn.com?a=1&b=2&a=2"),
+                        "www.saadbenn.com?a=1&b=2")
+        self.assertEqual(strip_url_params3("www.saadbenn.com?a=1&b=2",
+                        ['b']), "www.saadbenn.com?a=1")
 
 
 class TestValidateCoordinates(unittest.TestCase):
@@ -479,6 +503,8 @@ class TestStrongPassword(unittest.TestCase):
     def test_strong_password(self):
         self.assertEqual(3, strong_password(3, "Ab1"))
         self.assertEqual(1, strong_password(11, "#Algorithms"))
+        self.assertEqual(2, strong_password(4, "#AB1"))
+        self.assertEqual(2, strong_password(4, "#ab1"))
 
 
 class TestCaesarCipher(unittest.TestCase):
@@ -507,7 +533,7 @@ class TestCountBinarySubstring(unittest.TestCase):
         self.assertEqual(3, count_binary_substring("00110"))
 
 
-class TestCountBinarySubstring(unittest.TestCase):
+class TestRepeatString(unittest.TestCase):
     def test_repeat_string(self):
         self.assertEqual(3, repeat_string("abcd", "cdabcdab"))
         self.assertEqual(4, repeat_string("bb", "bbbbbbb"))
