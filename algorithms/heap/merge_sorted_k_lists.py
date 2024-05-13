@@ -33,7 +33,7 @@ def merge_k_lists(lists):
     return dummy.next
 
 
-def merge_k_lists(lists):
+def merge_k_lists2(lists):
     """ Merge List """
     dummy = ListNode(None)
     curr = dummy

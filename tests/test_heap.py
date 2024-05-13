@@ -1,8 +1,11 @@
 from algorithms.heap import (
     BinaryHeap,
+    ListNode,
     get_skyline,
     max_sliding_window,
-    k_closest
+    k_closest,
+    merge_k_lists,
+    merge_k_lists2
 )
 
 import unittest
@@ -63,7 +66,30 @@ class TestSuite(unittest.TestCase):
                           (-1, 0)], k_closest(points, 4))
         self.assertEqual([(10, 2), (2, 8), (5, 2), (-2, -2), (2, 3),
                           (1, 0), (-1, 0), (1, 1)], k_closest(points, 8))
+        
 
+class TestListNode(unittest.TestCase):
+    def test_merge_k_lists(self):
+        self.assertEqual(None, merge_k_lists([]))
+
+        l1 = ListNode(1)
+        l2 = ListNode(2)
+        l1.next = ListNode(2)
+        expected = l1
+        l1.next = l2
+
+        self.assertEqual(expected, merge_k_lists([l1]))
+
+    def test_merge_k_lists2(self):
+        self.assertEqual(None, merge_k_lists2([]))
+
+        l1 = ListNode(1)
+        l2 = ListNode(2)
+        l1.next = ListNode(2)
+        expected = l1
+        l1.next = l2
+
+        self.assertEqual(expected, merge_k_lists2([l1]))
 
 if __name__ == "__main__":
     unittest.main()
